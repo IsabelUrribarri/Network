@@ -1,0 +1,38 @@
+.contenedor-principal {
+  margin: 0 10px;
+  padding: 10px;
+  /* background-color: rebeccapurple; */
+}
+
+.contenedor-post {
+  border: 1px solid  #cfcfcf;
+  border-radius: 7px;
+  width: 700px;
+  padding: 5px;
+}
+
+.contenedor-post > h1 {
+  font-size: 28px;
+}
+
+.contenedor-lista-posts {
+  background-color: green;
+  width: 700px;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.contenedor-usuario-post {
+  background-color: gray;
+}
+.contenedor-edit {
+  background-color: yellow;
+}
+  
+.contenedor-text-post {
+  background-color: orange
+}
+  
+.contenedor-comments-post{
+  background-color: red;
+}
