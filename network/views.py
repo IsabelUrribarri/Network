@@ -9,9 +9,15 @@ from .models import User, Post
 
 def index(request):
     return render(request, "network/index.html", {
-           "posts": Post.objects.all()
+           "posts": Post.objects.all().order_by('-date_creation'),
+           "show_new_post": True
         })
 
+def allPosts(request):
+    return render(request, "network/index.html", {
+           "posts": Post.objects.all().order_by('-date_creation'),
+           "show_new_post": False
+        })
 
 def login_view(request):
     if request.method == "POST":
@@ -63,3 +69,14 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "network/register.html")
+
+
+
+def new_post (request):
+    if request.method == "POST":
+        new_post = Post()
+        new_post.user = request.user
+        new_post.text = request.POST["text"]
+        new_post.save()
+        return HttpResponseRedirect(reverse("index")) 
+        

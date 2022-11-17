@@ -5,19 +5,23 @@
 {% if user.is_authenticated %}
 <div class="contenedor-principal">
   <h1>All Posts</h1>
+  {% if show_new_post %}
   <div class="contenedor-post">
     <h1>New Post</h1>
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'new_post' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
-        <textarea class="form-control" style="height: 100px; margin-top: 12px;" name="text" placeholder="Write here"></textarea>
+        <textarea class="form-control" style="height: 100px; margin-top: 12px;" name="text"
+          placeholder="Write here"></textarea>
       </div>
       <input type="hidden" name="userid" value="{{ user.id }}">
       <input class="btn btn-primary" type="submit" value="Post">
     </form>
   </div>
+  {% endif %}
   <div class="contenedor-lista-posts">
     {% for post in posts %}
+    <div class="contenedor-post-anterior">
       <div class="contenedor-usuario-post">
         {{ post.user.username }}
       </div>
@@ -28,14 +32,19 @@
         {{ post.text }} <br>
         {{ post.date_creation }}
       </div>
+      <div class="contenedor-likes">likes 0</div>
       <div class="contenedor-comments-post">
         comments
       </div>
-      
 
+    </div>
     {% endfor %}
   </div>
 
   {% endif %}
 </div>
+
+{% endblock %}
+{% block script %}
+<script></script>
 {% endblock %}
