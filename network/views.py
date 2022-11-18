@@ -19,6 +19,13 @@ def allPosts(request):
            "show_new_post": False
         })
 
+def profile(request, id):
+    user = User.objects.get(id=id)
+    return render(request, "network/profile.html", {
+           "posts": Post.objects.filter(user=user).order_by('-date_creation'),
+           
+        })
+
 def login_view(request):
     if request.method == "POST":
 

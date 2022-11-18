@@ -1,0 +1,43 @@
+{% extends "network/layout.html" %}
+{% load static %}
+<!-- https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg -->
+<!-- https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg -->
+{% block body %}
+  {% if user.is_authenticated %}
+    <div class="contenedor-encabezado">
+      <div class="contenedor-foto">
+        <img class="imagen-foto" src="https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg" alt="profile-picture">
+      </div>
+      <div class="contenedor-banner">
+        <img class="imagen-banner" src="https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg" alt="banner-de-burbujas">  
+      </div>
+    </div>
+    <div class="contenedor-cuerpo">
+      <div class="contenedor-datos-usuario"></diV>
+      <div class="contenedor-boton"></div>
+    </div>
+    <div class="contenedor-lista-posts">
+      {% for post in posts %}
+      <div class="contenedor-post-anterior">
+        <div class="contenedor-usuario-post">
+          {{ post.user.username }}
+        </div>
+        <div class="contenedor-edit">
+          <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+        </div>
+        <div class="contenedor-text-post">
+          {{ post.text }} <br>
+          {{ post.date_creation }}
+        </div>
+        <div class="contenedor-likes">likes 0</div>
+        <div class="contenedor-comments-post">
+          comments
+        </div>
+  
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+{% endblock %}
