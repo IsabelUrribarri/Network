@@ -3,6 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from datetime import date, datetime
 
 from .models import User, Post
 
@@ -23,6 +24,12 @@ def profile(request, id):
     user = User.objects.get(id=id)
     return render(request, "network/profile.html", {
            "posts": Post.objects.filter(user=user).order_by('-date_creation'),
+           "user": user,
+           "month": user.date_creation.strftime("%B"),
+           "year":user.date_creation.year,
+           "following": 117,
+           "followers": 320,
+           "login_user": request.user
            
         })
 
@@ -55,6 +62,7 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+        date_creation = date.today()
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -66,7 +74,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, email, password, date_creation)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {

@@ -29,6 +29,10 @@
   padding-left: 10px;
 }
 
+.contenedor-datos-usuario {
+  padding-left: 10px;
+}
+
 .contenedor-usuario-post {
   font-weight: bold;
 }
@@ -68,4 +72,32 @@
 
 .imagen-banner {
   width: 100%; 
+}
+
+.contenedor-cuerpo {
+  /* background-color: pink; */
+  display: flex;
+  width: 685px;
+  padding: 5px;
+  margin-top: 10px;
+  margin-left: 10px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border: 1px solid  #cfcfcf;
+  border-radius: 7px;
+
+}
+
+.contenedor-follow {
+  display: flex;
+  width: 220px;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.contenedor-boton {
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }

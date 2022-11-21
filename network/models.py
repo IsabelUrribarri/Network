@@ -4,6 +4,8 @@ from django.db import models
 
 class User(AbstractUser):
     pass
+    date_creation = models.DateTimeField(auto_now_add=True, null=True)
+    date_update = models.DateTimeField(auto_now=True, null=True)
 
 class Post(models.Model):
     text = models.TextField(blank = True)

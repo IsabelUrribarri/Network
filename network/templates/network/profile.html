@@ -13,8 +13,19 @@
       </div>
     </div>
     <div class="contenedor-cuerpo">
-      <div class="contenedor-datos-usuario"></diV>
-      <div class="contenedor-boton"></div>
+      <div class="contenedor-datos-usuario">
+        @{{ user.username }} <br>
+        Joined {{ month }} {{ year }} <br>
+        <div class="contenedor-follow">
+          <span><strong>{{ following }}</strong> Following</span> 
+          <span><strong>{{ followers }}</strong> Followers</span>
+        </div>
+      </diV>
+      <div class="contenedor-boton">
+        {% if user.id == login_user.id %}
+        <button type="button" class="btn btn-outline-primary">Edit</button>
+        {% endif %}
+      </div>
     </div>
     <div class="contenedor-lista-posts">
       {% for post in posts %}
