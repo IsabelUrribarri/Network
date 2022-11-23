@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from datetime import date, datetime
 
-from .models import User, Post
+from .models import User, Post, UserFollowing
 
 
 def index(request):
@@ -29,9 +29,17 @@ def profile(request, id):
            "year":user.date_creation.year,
            "following": 117,
            "followers": 320,
-           "login_user": request.user
-           
+           "login_user": request.user,
+           "option": 'Follow',
         })
+
+def followers(request, user_id):
+    user = User.objects.get(id=user_id)
+    followers = user.followers.all()
+    return render(request, "network/followers.html", {
+        "user": user,
+        "followers": followers
+    })
 
 def login_view(request):
     if request.method == "POST":

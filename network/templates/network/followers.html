@@ -1,0 +1,14 @@
+{% extends "network/layout.html" %}
+{% load static %}
+<!-- https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg -->
+<!-- https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg -->
+{% block body %}
+{% if user.is_authenticated %}
+{% for follower in followers %}
+    <p>{{ follower.username }}</p> 
+{% endfor %}
+
+{% endif %}
+
+
+{% endblock %}

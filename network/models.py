@@ -34,3 +34,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.user.username} - {self.comment} - {self.post.text}" 
+
+# los seguidores de user_id
+class UserFollowing(models.Model):
+    user_id = models.ForeignKey("User",on_delete=models.CASCADE, related_name="following")
+    following_user_id = models.ForeignKey("User", on_delete=models.CASCADE, related_name="followers")
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_id.username}"

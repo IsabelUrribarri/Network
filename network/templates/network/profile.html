@@ -23,7 +23,9 @@
       </diV>
       <div class="contenedor-boton">
         {% if user.id == login_user.id %}
-        <button type="button" class="btn btn-outline-primary">Edit</button>
+          <button type="button" class="btn btn-outline-primary">Edit</button>
+        {% else %}
+          <button type="button" class="btn btn-outline-primary">{{ option }}</button>
         {% endif %}
       </div>
     </div>
