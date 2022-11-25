@@ -42,4 +42,4 @@ class UserFollowing(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user_id.username}"
+        return f"seguidor: {self.user_id.username} - siguiendo a: {self.following_user_id.username}"

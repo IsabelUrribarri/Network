@@ -7,6 +7,12 @@ from datetime import date, datetime
 
 from .models import User, Post, UserFollowing
 
+def ifFollowing(following, follower):
+    result = following.following.filter(following_user_id=follower)
+    if result.count() > 0:
+        return 'Unfollow'
+    else: 
+        return 'Follow'
 
 def index(request):
     return render(request, "network/index.html", {
@@ -22,24 +28,17 @@ def allPosts(request):
 
 def profile(request, id):
     user = User.objects.get(id=id)
+    logged_user = request.user
     return render(request, "network/profile.html", {
            "posts": Post.objects.filter(user=user).order_by('-date_creation'),
            "user": user,
            "month": user.date_creation.strftime("%B"),
            "year":user.date_creation.year,
-           "following": 117,
-           "followers": 320,
+           "following": user.following.count(),
+           "followers": user.followers.count(),
            "login_user": request.user,
-           "option": 'Follow',
+           "option": ifFollowing(logged_user, user),
         })
-
-def followers(request, user_id):
-    user = User.objects.get(id=user_id)
-    followers = user.followers.all()
-    return render(request, "network/followers.html", {
-        "user": user,
-        "followers": followers
-    })
 
 def login_view(request):
     if request.method == "POST":
@@ -71,6 +70,7 @@ def register(request):
         username = request.POST["username"]
         email = request.POST["email"]
         date_creation = date.today()
+        date_update =  date.today()
 
         # Ensure password matches confirmation
         password = request.POST["password"]
@@ -82,7 +82,7 @@ def register(request):
 
         # Attempt to create new user
         try:
-            user = User.objects.create_user(username, email, password, date_creation)
+            user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
             return render(request, "network/register.html", {
