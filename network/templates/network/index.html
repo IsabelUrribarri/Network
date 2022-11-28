@@ -4,7 +4,7 @@
 {% block body %}
 {% if user.is_authenticated %}
 <div class="contenedor-principal">
-  <h1>All Posts</h1>
+  <h1>{{ title }}</h1>
   {% if show_new_post %}
   <div class="contenedor-post">
     <h1>New Post</h1>
@@ -23,7 +23,8 @@
     {% for post in posts %}
     <div class="contenedor-post-anterior">
       <div class="contenedor-usuario-post">
-        {{ post.user.username }}
+        
+        <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
       </div>
       <div class="contenedor-edit">
         <a href="{% url 'index' %}" onclick="return false;">Edit</a>

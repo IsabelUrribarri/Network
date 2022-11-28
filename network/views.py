@@ -23,7 +23,25 @@ def index(request):
 def allPosts(request):
     return render(request, "network/index.html", {
            "posts": Post.objects.all().order_by('-date_creation'),
-           "show_new_post": False
+           "show_new_post": False,
+           "title": "All Posts"
+        })
+def followingPosts(request, id):
+    user = User.objects.get(id=id)
+    max = UserFollowing.objects.filter(user_id=user).count()
+    count = max
+    mydata = None
+    for following in UserFollowing.objects.filter(user_id=id):
+        if count == max:
+            mydata = Post.objects.filter(user=following) 
+            count = count -1
+        elif count < max and count > 0:
+            mydata = mydata | Post.objects.filter(user=following) 
+            count = count -1
+    return render(request, "network/index.html", {
+           "posts": mydata,
+           "show_new_post": False,
+           "title": "Following Posts"
         })
 
 def profile(request, id):
