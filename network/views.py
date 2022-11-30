@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import date, datetime
-
+from django.core.paginator import Paginator
 from .models import User, Post, UserFollowing
 
 def ifFollowing(following, follower):
@@ -15,9 +15,15 @@ def ifFollowing(following, follower):
         return 'Follow'
 
 def index(request):
+    objects = Post.objects.all().order_by('-date_creation')
+    paginator = Paginator(objects, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    pages = []
     return render(request, "network/index.html", {
-           "posts": Post.objects.all().order_by('-date_creation'),
-           "show_new_post": True
+        "posts": page_obj,
+        "show_new_post": True,
+        
         })
 
 def allPosts(request):
@@ -31,15 +37,16 @@ def followingPosts(request, id):
     max = UserFollowing.objects.filter(user_id=user).count()
     count = max
     mydata = None
-    for following in UserFollowing.objects.filter(user_id=id):
+    records = UserFollowing.objects.filter(user_id=id)
+    for following in records:
         if count == max:
-            mydata = Post.objects.filter(user=following) 
+            mydata = Post.objects.filter(user=following.following_user_id) 
             count = count -1
         elif count < max and count > 0:
-            mydata = mydata | Post.objects.filter(user=following) 
+            mydata = mydata | Post.objects.filter(user=following.following_user_id) 
             count = count -1
     return render(request, "network/index.html", {
-           "posts": mydata,
+           "posts": mydata.order_by('-date_creation'),
            "show_new_post": False,
            "title": "Following Posts"
         })
