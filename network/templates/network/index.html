@@ -3,46 +3,84 @@
 
 {% block body %}
 {% if user.is_authenticated %}
-<div class="contenedor-principal">
-  <h1>{{ title }}</h1>
-  {% if show_new_post %}
-  <div class="contenedor-post">
-    <h1>New Post</h1>
-    <form action="{% url 'new_post' %}" method="post">
-      {% csrf_token %}
-      <div class="form-group">
-        <textarea class="form-control" style="height: 100px; margin-top: 12px;" name="text"
-          placeholder="Write here"></textarea>
+  <div class="contenedor-principal">
+    <h1>{{ title }}</h1>
+    {% if show_new_post %}
+      <div class="contenedor-post">
+        <h1>New Post</h1>
+        <form action="{% url 'new_post' %}" method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <textarea class="form-control" style="height: 100px; margin-top: 12px;" name="text"
+              placeholder="Write here"></textarea>
+          </div>
+          <input type="hidden" name="userid" value="{{ user.id }}">
+          <input class="btn btn-primary" type="submit" value="Post">
+        </form>
       </div>
-      <input type="hidden" name="userid" value="{{ user.id }}">
-      <input class="btn btn-primary" type="submit" value="Post">
-    </form>
-  </div>
-  {% endif %}
-  <div class="contenedor-lista-posts">
-    {% for post in posts %}
-    <div class="contenedor-post-anterior">
-      <div class="contenedor-usuario-post">
-        
-        <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+    {% endif %}
+    <div class="contenedor-lista-posts">
+      {% for post in posts %}
+      <div class="contenedor-post-anterior">
+        <div class="contenedor-usuario-post">
+          
+          <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+        </div>
+        <div class="contenedor-edit">
+          <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+        </div>
+        <div class="contenedor-text-post">
+          {{ post.text }} <br>
+          {{ post.date_creation }}
+        </div>
+        <div class="contenedor-likes">likes 0</div>
+        <div class="contenedor-comments-post">
+          comments
+        </div>
       </div>
-      <div class="contenedor-edit">
-        <a href="{% url 'index' %}" onclick="return false;">Edit</a>
-      </div>
-      <div class="contenedor-text-post">
-        {{ post.text }} <br>
-        {{ post.date_creation }}
-      </div>
-      <div class="contenedor-likes">likes 0</div>
-      <div class="contenedor-comments-post">
-        comments
-      </div>
-
+      {% endfor %}
     </div>
-    {% endfor %}
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if posts.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% endif %}
+        {% for  %}
+        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+        {% if posts.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <div class="pagination">
+      <span class="step-links">
+          {% if posts.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ posts.previous_page_number }}">previous</a>
+          {% endif %}
+  
+          <span class="current">
+              Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+          </span>
+  
+          {% if posts.has_next %}
+              <a href="?page={{ posts.next_page_number }}">next</a>
+              <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+      </span>
   </div>
 
-  {% endif %}
+{% endif %}
 </div>
 
 {% endblock %}
