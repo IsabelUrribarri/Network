@@ -1,11 +1,14 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from datetime import date, datetime
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import User, Post, UserFollowing
+from django.views.decorators.csrf import csrf_exempt
 
 def ifFollowing(following, follower):
     result = following.following.filter(following_user_id=follower)
@@ -25,6 +28,17 @@ def index(request):
         "show_new_post": True,
         
         })
+
+@csrf_exempt
+def add_follow(request):
+    user = request.user
+    data = json.loads(request.body)
+    following_user = User.objects.get(id=data.get('user_id'))
+    user_following = UserFollowing()
+    user_following.user_id = user
+    user_following.following_user_id = following_user
+    user_following.save()
+    return JsonResponse({"message": "Email sent successfully."}, status=201)
 
 def allPosts(request):
     return render(request, "network/index.html", {

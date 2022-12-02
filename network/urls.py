@@ -12,6 +12,8 @@ urlpatterns = [
     path("allPosts", views.allPosts, name="allPosts"),
     path("followingPosts/<int:id>", views.followingPosts, name="followingPosts"),
     path("profile/<int:id>", views.profile, name="profile"),
-    
+
+# API Routes
+    path("network", views.add_follow, name="add_follow"), 
 ]
  
