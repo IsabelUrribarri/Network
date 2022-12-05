@@ -14,6 +14,7 @@ urlpatterns = [
     path("profile/<int:id>", views.profile, name="profile"),
 
 # API Routes
-    path("network", views.add_follow, name="add_follow"), 
+    path("profile/network", views.follow_unfollow, name="follow_unfollow"),
+    path("network/<int:user_id>", views.get_user, name="get_user"), 
 ]
  

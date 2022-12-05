@@ -18,7 +18,7 @@
         Joined {{ month }} {{ year }} <br>
         <div class="contenedor-follow">
           <span><strong>{{ following }}</strong> Following</span> 
-          <span><strong>{{ followers }}</strong> Followers</span>
+          <span><strong id="followers">{{ followers }}</strong> Followers</span>
         </div>
       </div>
       <input type="hidden" value="{{ user.id }}" id="user-id">
@@ -63,29 +63,48 @@
     button.addEventListener('click', () => button_action('action'));
   });
 
+ // fetch(`/network/${user_id}`)
+      // .then(response => response.json())
+      // .then(username => {
+      //   // Print email
+      //   console.log(username);
+      // });
+
   function button_action(action) {
     if (button.innerHTML == 'Follow'){
       console.log('Follow')
+      user_id = (document.querySelector('#user-id').value)
       fetch('network', {
         method: 'POST',
         body: JSON.stringify({
-          following_user_id: document.querySelector('#user-id').value,
+          following_user_id: user_id,
+          action: 'Follow'
+        })
       })
-    })
       .then(response => response.json())
       .then(result => {
-        // Print result
-        console.log(result);
       });
-    
     }
     else if (button.innerHTML == 'Unfollow'){
       console.log('Unfollow')
+      user_id = (document.querySelector('#user-id').value)
+      fetch('network', {
+        method: 'POST',
+        body: JSON.stringify({
+          following_user_id: user_id,
+          action: 'Unfollow'
+        })
+      })
+      .then(response => response.json())
+      .then(result => {
+      });
     }
 
     else if (button.innerHTML == 'Edit'){
       console.log('Edit')
     }
+    location.reload()
+  
   }
 </script>
 {% endblock %}

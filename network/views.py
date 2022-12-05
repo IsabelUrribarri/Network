@@ -30,15 +30,24 @@ def index(request):
         })
 
 @csrf_exempt
-def add_follow(request):
+def follow_unfollow(request):
     user = request.user
     data = json.loads(request.body)
-    following_user = User.objects.get(id=data.get('user_id'))
-    user_following = UserFollowing()
-    user_following.user_id = user
-    user_following.following_user_id = following_user
-    user_following.save()
+    following_user_id = data.get('following_user_id')
+    following_user = User.objects.get(id=following_user_id)
+    if data.get('action') == 'Unfollow':
+        UserFollowing.objects.filter(user_id=user, following_user_id=following_user).delete()
+        
+    elif data.get('action') == 'Follow':
+        user_following = UserFollowing()
+        user_following.user_id = user
+        user_following.following_user_id = following_user
+        user_following.save()
     return JsonResponse({"message": "Email sent successfully."}, status=201)
+
+def get_user(request,user_id):
+    user = User.objects.get(id=user_id)
+    return JsonResponse({"message": f"el usuario es {user.username}"}, status=201)
 
 def allPosts(request):
     return render(request, "network/index.html", {
