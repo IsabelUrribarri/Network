@@ -6,8 +6,8 @@
   <div class="contenedor-principal">
     <h1>{{ title }}</h1>
     {% if show_new_post %}
-      <div class="contenedor-post">
-        <h1>New Post</h1>
+      <div class="contenedor-post" id="new-edit-container">
+        <h1 id="new-or-edit-title">New Post</h1>
         <form action="{% url 'new_post' %}" method="post">
           {% csrf_token %}
           <div class="form-group">
@@ -23,12 +23,13 @@
       {% for post in posts %}
       <div class="contenedor-post-anterior">
         <div class="contenedor-usuario-post">
-          
           <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
         </div>
+        {% if user.id == post.user.id %}
         <div class="contenedor-edit">
-          <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+          <a href="#new-edit-container" class="edit-post-link" onclick="return false;">Edit</a>
         </div>
+        {% endif %}
         <div class="contenedor-text-post">
           {{ post.text }} <br>
           {{ post.date_creation }}
@@ -70,5 +71,24 @@
 
 {% endblock %}
 {% block script %}
-<script></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+
+  // document.querySelector('#edit-post-link').addEventListener('click', () => edit_post());
+  edit_list = document.querySelectorAll('.edit-post-link');
+
+  for (let i = 0; i < edit_list.length; i++) {
+    edit_list[i].addEventListener('click', () => edit_post());
+  }
+  // document.querySelector('#new-or-edit-title').style.display = 'none';
+  // document.querySelector('#edit-post-link').style.display = 'block';
+
+  })
+
+  function edit_post() {
+    document.querySelector('#new-or-edit-title').innerHTML = 'Edit Post'
+    
+  }
+
+</script>
 {% endblock %}

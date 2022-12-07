@@ -43,7 +43,7 @@ def follow_unfollow(request):
         user_following.user_id = user
         user_following.following_user_id = following_user
         user_following.save()
-    return JsonResponse({"message": "Email sent successfully."}, status=201)
+    return JsonResponse({"message": f"El usuario {following_user.username} fue seguido"}, status=201)
 
 def get_user(request,user_id):
     user = User.objects.get(id=user_id)
