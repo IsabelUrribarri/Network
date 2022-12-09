@@ -11,7 +11,7 @@
         <form action="{% url 'new_post' %}" method="post">
           {% csrf_token %}
           <div class="form-group">
-            <textarea class="form-control" style="height: 100px; margin-top: 12px;" name="text"
+            <textarea id="text-area" class="form-control" style="height: 100px; margin-top: 12px;" name="text"
               placeholder="Write here"></textarea>
           </div>
           <input type="hidden" name="userid" value="{{ user.id }}">
@@ -21,18 +21,20 @@
     {% endif %}
     <div class="contenedor-lista-posts">
       {% for post in posts %}
-      <div class="contenedor-post-anterior">
-        <div class="contenedor-usuario-post">
-          <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-        </div>
-        {% if user.id == post.user.id %}
-        <div class="contenedor-edit">
-          <a href="#new-edit-container" class="edit-post-link" onclick="return false;">Edit</a>
-        </div>
-        {% endif %}
-        <div class="contenedor-text-post">
-          {{ post.text }} <br>
-          {{ post.date_creation }}
+        <div class="contenedor-post-anterior">
+          <div class="contenedor-usuario-post">
+            <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+          </div>
+          {% if user.id == post.user.id %}
+          <div class="contenedor-edit">
+            <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+          </div>
+          {% endif %}
+          <div class="contenedor-text-post">
+            {{ post.text }} <br>
+            {{ post.date_creation }} <br>
+            {{ post.id }}
+            <input type="hidden" class="post_id_list" value="{{ post.id }}">
         </div>
         <div class="contenedor-likes">likes 0</div>
         <div class="contenedor-comments-post">
@@ -75,20 +77,31 @@
   document.addEventListener('DOMContentLoaded', function () {
 
   // document.querySelector('#edit-post-link').addEventListener('click', () => edit_post());
-  edit_list = document.querySelectorAll('.edit-post-link');
+  edit_list = document.querySelectorAll('.contenedor-edit');
 
   for (let i = 0; i < edit_list.length; i++) {
-    edit_list[i].addEventListener('click', () => edit_post());
+    edit_list[i].addEventListener('click', () => edit_post(i));
   }
   // document.querySelector('#new-or-edit-title').style.display = 'none';
   // document.querySelector('#edit-post-link').style.display = 'block';
 
   })
 
-  function edit_post() {
+  function edit_post(i) {
     document.querySelector('#new-or-edit-title').innerHTML = 'Edit Post'
-    
+    id_list = document.querySelectorAll('.post_id_list')
+    post_id = id_list[i].value
+    console.log(post_id)
+    fetch(`/network/${post_id}`)
+      .then(response => response.json())
+      .then(text => {
+        // Print email
+        console.log(text);
+        document.querySelector('#text-area').innerHTML = text
+      });
+    document.querySelector('#text-area').focus();
   }
+
 
 </script>
 {% endblock %}

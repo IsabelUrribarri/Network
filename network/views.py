@@ -45,9 +45,11 @@ def follow_unfollow(request):
         user_following.save()
     return JsonResponse({"message": f"El usuario {following_user.username} fue seguido"}, status=201)
 
-def get_user(request,user_id):
-    user = User.objects.get(id=user_id)
-    return JsonResponse({"message": f"el usuario es {user.username}"}, status=201)
+def get_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    return JsonResponse({
+        "text": post.text
+        }, status=201)
 
 def allPosts(request):
     return render(request, "network/index.html", {
