@@ -8,14 +8,14 @@
     {% if show_new_post %}
       <div class="contenedor-post" id="new-edit-container">
         <h1 id="new-or-edit-title">New Post</h1>
-        <form action="{% url 'new_post' %}" method="post">
+        <form id="post-form" action="{% url 'new_post' %}" method="post">
           {% csrf_token %}
           <div class="form-group">
             <textarea id="text-area" class="form-control" style="height: 100px; margin-top: 12px;" name="text"
               placeholder="Write here"></textarea>
           </div>
           <input type="hidden" name="userid" value="{{ user.id }}">
-          <input class="btn btn-primary" type="submit" value="Post">
+          <input id="save-button" class="btn btn-primary" type="submit" value="Post">
         </form>
       </div>
     {% endif %}
@@ -23,7 +23,7 @@
       {% for post in posts %}
         <div class="contenedor-post-anterior">
           <div class="contenedor-usuario-post">
-            <a href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+            <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
           </div>
           {% if user.id == post.user.id %}
           <div class="contenedor-edit">
@@ -94,10 +94,12 @@
     console.log(post_id)
     fetch(`/network/${post_id}`)
       .then(response => response.json())
-      .then(text => {
+      .then(post => {
         // Print email
-        console.log(text);
-        document.querySelector('#text-area').innerHTML = text
+        console.log(post);
+        document.querySelector('#text-area').innerHTML = post.text
+        document.querySelector('#save-button').value = 'Save' 
+        document.querySelector('#post-form').action = `http://127.0.0.1:8000/update_post/${post_id}`
       });
     document.querySelector('#text-area').focus();
   }

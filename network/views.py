@@ -152,4 +152,12 @@ def new_post (request):
         new_post.text = request.POST["text"]
         new_post.save()
         return HttpResponseRedirect(reverse("index")) 
-        
+    
+def update_post (request, id):
+    if request.method == "POST":
+        post = Post.objects.get(id=id)
+        post.text = request.POST["text"]
+        post.save()
+        return HttpResponseRedirect(reverse("index")) 
+    else:
+        return HttpResponseRedirect(reverse("index")) 
