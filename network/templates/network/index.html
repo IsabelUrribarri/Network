@@ -33,14 +33,15 @@
           <div class="contenedor-text-post">
             {{ post.text }} <br>
             {{ post.date_creation }} <br>
-            {{ post.id }}
             <input type="hidden" class="post_id_list" value="{{ post.id }}">
         </div>
-        <div class="contenedor-likes">likes 0</div>
+        <div class="contenedor-likes">
+          <span id="like-button">❤ {{ post.post_likes.count }}</span>
+        </div>
         <div class="contenedor-comments-post">
           comments
         </div>
-      </div>
+      </div>  
       {% endfor %}
     </div>
     <nav aria-label="Page navigation example">
@@ -82,10 +83,25 @@
   for (let i = 0; i < edit_list.length; i++) {
     edit_list[i].addEventListener('click', () => edit_post(i));
   }
-  // document.querySelector('#new-or-edit-title').style.display = 'none';
-  // document.querySelector('#edit-post-link').style.display = 'block';
+  like_list = document.querySelectorAll('.contenedor-likes');
+  for (let i = 0; i < like_list.length; i++) {
+    like_list[i].addEventListener('click', () => toggle_like(i));
+  }
 
   })
+
+  function toggle_like(i) {
+    id_list = document.querySelectorAll('.post_id_list')
+    post_id = id_list[i].value
+    console.log(post_id)
+    fetch(`/network/like/${post_id}`)
+      .then(response => response.json())
+      .then(post => {
+        // Print email
+        console.log(post);
+      });
+    location.reload()
+  }
 
   function edit_post(i) {
     document.querySelector('#new-or-edit-title').innerHTML = 'Edit Post'

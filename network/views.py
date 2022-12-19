@@ -7,7 +7,7 @@ from django.urls import reverse
 from datetime import date, datetime
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from .models import User, Post, UserFollowing
+from .models import User, Post, UserFollowing, Like
 from django.views.decorators.csrf import csrf_exempt
 
 def ifFollowing(following, follower):
@@ -51,6 +51,25 @@ def get_post(request, post_id):
         "text": post.text
         }, status=201)
 
+def toggle_like(request, post_id):
+    post = Post.objects.get(id=post_id)
+    like = Like.objects.filter(post=post, user=request.user).count()
+    #si no le ha dado like, asociar el like
+    print(like)
+    if like == 0:
+        new_like = Like()
+        new_like.post = post
+        new_like.user = request.user
+        new_like.save()
+        msg = 'like agregado'
+    #si tenia like se lo quito
+    else:
+        Like.objects.filter(post=post, user=request.user).delete()
+        msg = 'like eliminado'
+    return JsonResponse({
+        "text": msg
+        }, status=201)
+
 def allPosts(request):
     return render(request, "network/index.html", {
            "posts": Post.objects.all().order_by('-date_creation'),
@@ -71,7 +90,7 @@ def followingPosts(request, id):
             mydata = mydata | Post.objects.filter(user=following.following_user_id) 
             count = count -1
     return render(request, "network/index.html", {
-           "posts": mydata.order_by('-date_creation'),
+           "posts": None if mydata is None else mydata.order_by('-date_creation'),
            "show_new_post": False,
            "title": "Following Posts"
         })

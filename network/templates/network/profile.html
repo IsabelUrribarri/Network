@@ -87,6 +87,7 @@
       .then(result => {
         console.log(result)
       });
+      location.reload()
     }
     else if (button.innerHTML == 'Unfollow'){
       console.log('Unfollow')
@@ -101,6 +102,7 @@
       .then(response => response.json())
       .then(result => {
       });
+      location.reload()
     }
 
     else if (button.innerHTML == 'Edit'){
