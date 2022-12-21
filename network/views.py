@@ -51,6 +51,26 @@ def get_post(request, post_id):
         "text": post.text
         }, status=201)
 
+def set_like(request, posts):
+    for 
+    post = Post.objects.get(id=post_id)
+    like = Like.objects.filter(post=post, user=request.user).count()
+    #si no le ha dado like, asociar el like
+    print(like)
+    if like == 0:
+        new_like = Like()
+        new_like.post = post
+        new_like.user = request.user
+        new_like.save()
+        msg = 'Like'
+    #si tenia like se lo quito
+    else:
+        Like.objects.filter(post=post, user=request.user).delete()
+        msg = 'Dislike'
+    return JsonResponse({
+        "text": msg
+        }, status=201)
+
 def toggle_like(request, post_id):
     post = Post.objects.get(id=post_id)
     like = Like.objects.filter(post=post, user=request.user).count()
@@ -61,11 +81,11 @@ def toggle_like(request, post_id):
         new_like.post = post
         new_like.user = request.user
         new_like.save()
-        msg = 'like agregado'
+        msg = 'Like'
     #si tenia like se lo quito
     else:
         Like.objects.filter(post=post, user=request.user).delete()
-        msg = 'like eliminado'
+        msg = 'Dislike'
     return JsonResponse({
         "text": msg
         }, status=201)
