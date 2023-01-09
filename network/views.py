@@ -23,9 +23,17 @@ def index(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     pages = []
+    # construir lista de post id que tienen like
+    # construir lista de likes
+    mis_likes = Like.objects.filter(user=request.user)
+    # recorrer cada like y guardar en una nueva lista los post id
+    posts_con_like = []
+    for like in mis_likes:
+        posts_con_like.append(like.post.id)
     return render(request, "network/index.html", {
         "posts": page_obj,
         "show_new_post": True,
+        "posts_con_like": posts_con_like
         
         })
 
@@ -51,8 +59,7 @@ def get_post(request, post_id):
         "text": post.text
         }, status=201)
 
-def set_like(request, posts):
-    for 
+def set_like(request, post_id):
     post = Post.objects.get(id=post_id)
     like = Like.objects.filter(post=post, user=request.user).count()
     #si no le ha dado like, asociar el like
@@ -87,7 +94,8 @@ def toggle_like(request, post_id):
         Like.objects.filter(post=post, user=request.user).delete()
         msg = 'Dislike'
     return JsonResponse({
-        "text": msg
+        "text": msg,
+        "like_count": post.post_likes.count() 
         }, status=201)
 
 def allPosts(request):
@@ -189,8 +197,14 @@ def new_post (request):
         new_post = Post()
         new_post.user = request.user
         new_post.text = request.POST["text"]
-        new_post.save()
-        return HttpResponseRedirect(reverse("index")) 
+        if len(new_post.text) < 6:
+            return render(request, "network/index.html", {
+                "message": "Your message is too short",
+                "show_new_post": True,
+            })
+        else:
+            new_post.save()
+            return HttpResponseRedirect(reverse("index")) 
     
 def update_post (request, id):
     if request.method == "POST":

@@ -5,6 +5,9 @@
 {% if user.is_authenticated %}
   <div class="contenedor-principal">
     <h1>{{ title }}</h1>
+    {% if message %}
+     <h1>muy corto</h1>
+    {% endif %}
     {% if show_new_post %}
       <div class="contenedor-post" id="new-edit-container">
         <h1 id="new-or-edit-title">New Post</h1>
@@ -36,9 +39,12 @@
             <input type="hidden" class="post_id_list" value="{{ post.id }}">
         </div>
         <div class="contenedor-likes">
-          <span class="like-button">🤍</span>
-         {{ post.post_likes.filter(user.id=1) }} 
-           <!-- {{ post.post_likes.count }} -->
+          {% if post.id in posts_con_like %}
+            <span class="like-button">❤</span>
+          {% else %}
+            <span class="like-button">🤍</span>
+          {% endif%}
+          <span class="like-count">{{ post.post_likes.count }}</span>
         </div>
         <div class="contenedor-comments-post">
           comments
@@ -85,55 +91,30 @@
   for (let i = 0; i < edit_list.length; i++) {
     edit_list[i].addEventListener('click', () => edit_post(i));
   }
-  like_list = document.querySelectorAll('.contenedor-likes');
+  like_list = document.querySelectorAll('.like-button');
   for (let i = 0; i < like_list.length; i++) {
     like_list[i].addEventListener('click', () => toggle_like(i));
   }
-  set_likes_hearts()
+
   })
-
-  function set_likes_hearts() {
-    id_list = document.querySelectorAll('.post_id_list')
-    hearts = document.querySelectorAll('.like-button');
-    for (let i = 0; i < id_list.length; i++) {
-      fetch(`/network/like/${id_list[i]}`)
-      .then(response => response.json())
-      .then(object => {
-        // Print email
-        console.log(object)
-        console.log(object['text']);
-        if (object['text']==='Like'){
-          hearts[i].innerHTML = '❤'
-        }
-        else {
-          hearts[i].innerHTML = '🤍'
-        }
-      });
-    // location.reload()
-  }
-    post_id = id_list[i].value
-    console.log(post_id)
-    
-
-  }
 
   function toggle_like(i) {
     id_list = document.querySelectorAll('.post_id_list')
     post_id = id_list[i].value
     hearts = document.querySelectorAll('.like-button');
-    
+    like_count = document.querySelectorAll('.like-count')
+
     console.log(post_id)
     fetch(`/network/like/${post_id}`)
       .then(response => response.json())
       .then(object => {
-        // Print email
-        console.log(object)
-        console.log(object['text']);
         if (object['text']==='Like'){
           hearts[i].innerHTML = '❤'
+          like_count[i].innerHTML = object['like_count']
         }
         else {
           hearts[i].innerHTML = '🤍'
+          like_count[i].innerHTML = object['like_count']
         }
       });
     // location.reload()
