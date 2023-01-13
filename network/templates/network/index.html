@@ -3,76 +3,80 @@
 
 {% block body %}
 {% if user.is_authenticated %}
-  <div class="contenedor-principal">
-    <h1>{{ title }}</h1>
-    {% if message %}
-     <h1>muy corto</h1>
-    {% endif %}
-    {% if show_new_post %}
-      <div class="contenedor-post" id="new-edit-container">
-        <h1 id="new-or-edit-title">New Post</h1>
-        <form id="post-form" action="{% url 'new_post' %}" method="post">
-          {% csrf_token %}
-          <div class="form-group">
-            <textarea id="text-area" class="form-control" style="height: 100px; margin-top: 12px;" name="text"
-              placeholder="Write here"></textarea>
-          </div>
-          <input type="hidden" name="userid" value="{{ user.id }}">
-          <input id="save-button" class="btn btn-primary" type="submit" value="Post">
-        </form>
+<div class="contenedor-principal">
+  <h1>{{ title }}</h1>
+  {% if message %}
+  <h1>muy corto</h1>
+  {% endif %}
+  {% if show_new_post %}
+  <div class="contenedor-post" id="new-edit-container">
+    <h1 id="new-or-edit-title">New Post</h1>
+    <form id="post-form" action="{% url 'new_post' %}" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <textarea id="text-area" class="form-control" style="height: 100px; margin-top: 12px;" name="text"
+          placeholder="Write here"></textarea>
       </div>
-    {% endif %}
-    <div class="contenedor-lista-posts">
-      {% for post in posts %}
-        <div class="contenedor-post-anterior">
-          <div class="contenedor-usuario-post">
-            <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-          </div>
-          <div class="contenedor-edit">
-            {% if user.id == post.user.id %}
-              <a href="{% url 'index' %}" onclick="return false;">Edit</a>
-            {% endif %}
-          </div>
-          <div class="contenedor-text-post">
-            {{ post.text }} <br>
-            {{ post.date_creation }} <br>
-            <input type="hidden" class="post_id_list" value="{{ post.id }}">
-        </div>
-        <div class="contenedor-likes">
-          {% if post.id in posts_con_like %}
-            <span class="like-button">❤</span>
-          {% else %}
-            <span class="like-button">🤍</span>
-          {% endif%}
-          <span class="like-count">{{ post.post_likes.count }}</span>
-        </div>
-      </div>  
-      {% endfor %}
-    </div>
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        {% if posts.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-        {% endif %}
-        <li class="page-item"><span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}.</span></li>
-        {% if posts.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="?page={{ posts.paginator.num_pages }}">last</a>
-          </li>
-        {% endif %}
-      </ul>
-    </nav>
-    
+      <input type="hidden" name="userid" value="{{ user.id }}">
+      <input id="save-button" class="btn btn-primary" type="submit" value="Post">
+    </form>
   </div>
+  {% endif %}
+  <div class="contenedor-lista-posts">
+    {% for post in posts %}
+    <div class="contenedor-post-anterior">
+      <div class="contenedor-usuario-post">
+        <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+      </div>
+      <div class="contenedor-edit">
+        {% if user.id == post.user.id %}
+        <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+        {% endif %}
+      </div>
+      <div class="contenedor-text-post">
+        {{ post.text }} <br>
+        {{ post.date_creation }} <br>
+        <input type="hidden" class="post_id_list" value="{{ post.id }}">
+      </div>
+      <div class="contenedor-likes">
+        {% if post.id in posts_con_like %}
+        <span class="like-button">❤</span>
+        {% else %}
+        <span class="like-button">🤍</span>
+        {% endif%}
+        <span class="like-count">{{ post.post_likes.count }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% if posts.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">first</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% endif %}
+      <li class="page-item"><span class="page-link">Page {{ posts.number }} of {{ posts.paginator.num_pages }}.</span>
+      </li>
+      {% if posts.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">last</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+</div>
 
 {% endif %}
 </div>
@@ -81,28 +85,25 @@
 {% block script %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-  
-  document.querySelector('#save-button').disabled =true;
-  edit_list = document.querySelectorAll('.contenedor-edit');
-  document.querySelector('#text-area').onkeyup = () => {
-    if (document.querySelector('#text-area').value.length > 0){
-      document.querySelector('#save-button').disabled =false;
+    if (document.querySelector('#save-button') != null) {
+      document.querySelector('#save-button').disabled = true;
+      document.querySelector('#text-area').onkeyup = () => {
+        if (document.querySelector('#text-area').value.length > 0) {
+          document.querySelector('#save-button').disabled = false;
+        }
+        else {
+          document.querySelector('#save-button').disabled = true;
+        }
+      }
     }
-    else {
-      document.querySelector('#save-button').disabled =true;
+    edit_list = document.querySelectorAll('.contenedor-edit');
+    for (let i = 0; i < edit_list.length; i++) {
+      edit_list[i].addEventListener('click', () => edit_post(i));
     }
-
-  }
-  
-
-  for (let i = 0; i < edit_list.length; i++) {
-    edit_list[i].addEventListener('click', () => edit_post(i));
-  }
-  like_list = document.querySelectorAll('.like-button');
-  for (let i = 0; i < like_list.length; i++) {
-    like_list[i].addEventListener('click', () => toggle_like(i));
-  }
-
+    like_list = document.querySelectorAll('.like-button');
+    for (let i = 0; i < like_list.length; i++) {
+      like_list[i].addEventListener('click', () => toggle_like(i));
+    }
   })
 
   function toggle_like(i) {
@@ -111,11 +112,11 @@
     hearts = document.querySelectorAll('.like-button');
     like_count = document.querySelectorAll('.like-count')
 
-    console.log(post_id)
+    
     fetch(`/network/like/${post_id}`)
       .then(response => response.json())
       .then(object => {
-        if (object['text']==='Like'){
+        if (object['text'] === 'Like') {
           hearts[i].innerHTML = '❤'
           like_count[i].innerHTML = object['like_count']
         }
@@ -141,12 +142,11 @@
         // Print email
         console.log(post);
         document.querySelector('#text-area').innerHTML = post.text
-        document.querySelector('#save-button').value = 'Save' 
+        document.querySelector('#save-button').value = 'Save'
         document.querySelector('#post-form').action = `http://127.0.0.1:8000/update_post/${post_id}`
       });
     document.querySelector('#text-area').focus();
   }
-
 
 </script>
 {% endblock %}
