@@ -28,11 +28,11 @@
           <div class="contenedor-usuario-post">
             <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
           </div>
-          {% if user.id == post.user.id %}
           <div class="contenedor-edit">
-            <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+            {% if user.id == post.user.id %}
+              <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+            {% endif %}
           </div>
-          {% endif %}
           <div class="contenedor-text-post">
             {{ post.text }} <br>
             {{ post.date_creation }} <br>
@@ -45,9 +45,6 @@
             <span class="like-button">🤍</span>
           {% endif%}
           <span class="like-count">{{ post.post_likes.count }}</span>
-        </div>
-        <div class="contenedor-comments-post">
-          comments
         </div>
       </div>  
       {% endfor %}
@@ -84,9 +81,19 @@
 {% block script %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-
-  // document.querySelector('#edit-post-link').addEventListener('click', () => edit_post()); 
+  
+  document.querySelector('#save-button').disabled =true;
   edit_list = document.querySelectorAll('.contenedor-edit');
+  document.querySelector('#text-area').onkeyup = () => {
+    if (document.querySelector('#text-area').value.length > 0){
+      document.querySelector('#save-button').disabled =false;
+    }
+    else {
+      document.querySelector('#save-button').disabled =true;
+    }
+
+  }
+  
 
   for (let i = 0; i < edit_list.length; i++) {
     edit_list[i].addEventListener('click', () => edit_post(i));
@@ -124,7 +131,10 @@
     document.querySelector('#new-or-edit-title').innerHTML = 'Edit Post'
     id_list = document.querySelectorAll('.post_id_list')
     post_id = id_list[i].value
+    console.log(id_list)
     console.log(post_id)
+
+
     fetch(`/network/${post_id}`)
       .then(response => response.json())
       .then(post => {

@@ -17,7 +17,7 @@ def ifFollowing(following, follower):
     else: 
         return 'Follow'
 
-def index(request):
+def index(request, post_id=None):
     objects = Post.objects.all().order_by('-date_creation')
     paginator = Paginator(objects, 10)
     page_number = request.GET.get('page')
@@ -30,6 +30,14 @@ def index(request):
     posts_con_like = []
     for like in mis_likes:
         posts_con_like.append(like.post.id)
+    if post_id is not None:
+        return render(request, "network/index.html", {
+        "posts": page_obj,
+        "show_new_post": False,
+        "posts_con_like": posts_con_like,
+        "post": Post.objects.get(id=post_id)
+        
+        })
     return render(request, "network/index.html", {
         "posts": page_obj,
         "show_new_post": True,
@@ -197,14 +205,8 @@ def new_post (request):
         new_post = Post()
         new_post.user = request.user
         new_post.text = request.POST["text"]
-        if len(new_post.text) < 6:
-            return render(request, "network/index.html", {
-                "message": "Your message is too short",
-                "show_new_post": True,
-            })
-        else:
-            new_post.save()
-            return HttpResponseRedirect(reverse("index")) 
+        new_post.save()
+        return HttpResponseRedirect(reverse("index")) 
     
 def update_post (request, id):
     if request.method == "POST":
