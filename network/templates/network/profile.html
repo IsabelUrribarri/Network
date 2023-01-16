@@ -26,7 +26,7 @@
         {% if user.id == login_user.id %}
           <button type="button" class="btn btn-outline-primary">Edit</button>
         {% else %}
-          <button type="button" class="btn btn-outline-primary">{{ option }}</button>
+          <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
         {% endif %}
       </div>
     </div>
@@ -44,11 +44,17 @@
         <div class="contenedor-text-post">
           {{ post.text }} <br>
           {{ post.date_creation }}
+          <input type="hidden" class="post_id_list" value="{{ post.id }}">
         </div>
-        <div class="contenedor-likes">likes 0</div>
-        <div class="contenedor-comments-post">
-          comments
+        <div class="contenedor-likes">
+          {% if post.id in posts_con_like %}
+          <span class="like-button">❤</span>
+          {% else %}
+          <span class="like-button">🤍</span>
+          {% endif%}
+          <span class="like-count">{{ post.post_likes.count }}</span>
         </div>
+      </div>
   
       </div>
       {% endfor %}
@@ -63,14 +69,12 @@
 
     button = document.querySelector("button")
     button.addEventListener('click', () => button_action('action'));
+    number_of_followers = document.querySelector('#followers')
+    like_list = document.querySelectorAll('.like-button');
+    for (let i = 0; i < like_list.length; i++) {
+      like_list[i].addEventListener('click', () => toggle_like(i));
+    }
   });
-
- // fetch(`/network/${user_id}`)
-      // .then(response => response.json())
-      // .then(username => {
-      //   // Print email
-      //   console.log(username);
-      // });
 
   function button_action(action) {
     if (button.innerHTML == 'Follow'){
@@ -86,8 +90,11 @@
       .then(response => response.json())
       .then(result => {
         console.log(result)
+        number_of_followers.innerHTML = result.number_of_followers
+        button.innerHTML = 'Unfollow'
       });
-      location.reload()
+      console.log(number_of_followers)
+      // location.reload()
     }
     else if (button.innerHTML == 'Unfollow'){
       console.log('Unfollow')
@@ -101,8 +108,12 @@
       })
       .then(response => response.json())
       .then(result => {
+        console.log(result)
+        number_of_followers.innerHTML = result.number_of_followers
+        button.innerHTML = 'Follow'
       });
-      location.reload()
+
+      // location.reload()
     }
 
     else if (button.innerHTML == 'Edit'){
@@ -110,6 +121,27 @@
     }
     // location.reload()
   
+  }
+
+  function toggle_like(i) {
+    id_list = document.querySelectorAll('.post_id_list')
+    post_id = id_list[i].value
+    hearts = document.querySelectorAll('.like-button');
+    like_count = document.querySelectorAll('.like-count')
+
+    
+    fetch(`/network/like/${post_id}`)
+      .then(response => response.json())
+      .then(object => {
+        if (object['text'] === 'Like') {
+          hearts[i].innerHTML = '❤'
+          like_count[i].innerHTML = object['like_count']
+        }
+        else {
+          hearts[i].innerHTML = '🤍'
+          like_count[i].innerHTML = object['like_count']
+        }
+      });
   }
 </script>
 {% endblock %}
