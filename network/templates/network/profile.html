@@ -3,58 +3,59 @@
 <!-- https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg -->
 <!-- https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg -->
 {% block body %}
-  {% if user.is_authenticated %}
-    <div class="contenedor-encabezado">
-      <div class="contenedor-foto">
-        <!-- <img class="imagen-foto" src="https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg" alt="profile-picture"> -->
-      </div>
-      <div class="contenedor-banner">
-        <img class="imagen-banner" src="https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg" alt="banner-de-burbujas">  
-      </div>
+{% if user.is_authenticated %}
+<div class="marco">
+<div class="contenedor-encabezado">
+  <div class="contenedor-foto">
+  </div>
+  <div class="contenedor-banner">
+  </div>
+</div>
+
+<div class="contenedor-cuerpo">
+  <div class="contenedor-datos-usuario">
+    @{{ user.username }} <br>
+    Joined {{ month }} {{ year }} <br>
+    <div class="contenedor-follow">
+      <span><strong>{{ following }}</strong> Following</span>
+      <span><strong id="followers">{{ followers }}</strong> Followers</span>
     </div>
-    <div class="contenedor-cuerpo">
-      <div class="contenedor-datos-usuario">
-        @{{ user.username }} <br>
-        Joined {{ month }} {{ year }} <br>
-        <div class="contenedor-follow">
-          <span><strong>{{ following }}</strong> Following</span> 
-          <span><strong id="followers">{{ followers }}</strong> Followers</span>
-        </div>
-      </div>
-      <input type="hidden" value="{{ user.id }}" id="user-id">
-      <div class="contenedor-boton">
-        <!-- {% if user.id == login_user.id %}
+  </div>
+  <input type="hidden" value="{{ user.id }}" id="user-id">
+  <div class="contenedor-boton">
+    <!-- {% if user.id == login_user.id %}
           <button type="button" class="btn btn-outline-primary">Edit</button>
         {% else %} -->
-          <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
-        <!-- {% endif %} -->
+    <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
+    <!-- {% endif %} -->
+  </div>
+</div>
+</div>
+<div class="contenedor-lista-posts">
+  <div class="contenedor-lista-posts">
+    {% for post in posts %}
+    <div class="contenedor-post-anterior">
+      <div class="contenedor-usuario-post">
+        <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
+      </div>
+      <div class="contenedor-text-post">
+        {{ post.text }} <br>
+        {{ post.date_creation }} <br>
+        <input type="hidden" class="post_id_list" value="{{ post.id }}">
+      </div>
+      <div class="contenedor-likes">
+        {% if post.id in posts_con_like %}
+        <span class="like-button">❤</span>
+        {% else %}
+        <span class="like-button">🤍</span>
+        {% endif%}
+        <span class="like-count">{{ post.post_likes.count }}</span>
       </div>
     </div>
-    <div class="contenedor-lista-posts">
-      <div class="contenedor-lista-posts">
-        {% for post in posts %}
-        <div class="contenedor-post-anterior">
-          <div class="contenedor-usuario-post">
-            <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-          </div>
-          <div class="contenedor-text-post">
-            {{ post.text }} <br>
-            {{ post.date_creation }} <br>
-            <input type="hidden" class="post_id_list" value="{{ post.id }}">
-          </div>
-          <div class="contenedor-likes">
-            {% if post.id in posts_con_like %}
-            <span class="like-button">❤</span>
-            {% else %}
-            <span class="like-button">🤍</span>
-            {% endif%}
-            <span class="like-count">{{ post.post_likes.count }}</span>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
 
 {% endblock %}
@@ -72,7 +73,7 @@
   });
 
   function button_action(action) {
-    if (button.innerHTML == 'Follow'){
+    if (button.innerHTML == 'Follow') {
       console.log('Follow')
       user_id = (document.querySelector('#user-id').value)
       fetch('network', {
@@ -82,16 +83,16 @@
           action: 'Follow'
         })
       })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        number_of_followers.innerHTML = result.number_of_followers
-        button.innerHTML = 'Unfollow'
-      });
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          number_of_followers.innerHTML = result.number_of_followers
+          button.innerHTML = 'Unfollow'
+        });
       console.log(number_of_followers)
       // location.reload()
     }
-    else if (button.innerHTML == 'Unfollow'){
+    else if (button.innerHTML == 'Unfollow') {
       console.log('Unfollow')
       user_id = (document.querySelector('#user-id').value)
       fetch('network', {
@@ -101,21 +102,21 @@
           action: 'Unfollow'
         })
       })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-        number_of_followers.innerHTML = result.number_of_followers
-        button.innerHTML = 'Follow'
-      });
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          number_of_followers.innerHTML = result.number_of_followers
+          button.innerHTML = 'Follow'
+        });
 
       // location.reload()
     }
 
-    else if (button.innerHTML == 'Edit'){
+    else if (button.innerHTML == 'Edit') {
       console.log('Edit')
     }
     // location.reload()
-  
+
   }
 
   function toggle_like(i) {
@@ -124,7 +125,7 @@
     hearts = document.querySelectorAll('.like-button');
     like_count = document.querySelectorAll('.like-count')
 
-    
+
     fetch(`/network/like/${post_id}`)
       .then(response => response.json())
       .then(object => {
