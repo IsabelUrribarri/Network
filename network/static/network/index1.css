@@ -35,6 +35,11 @@
 
 .contenedor-usuario-post {
   font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 5px;
+  padding-top: 5px;
+  align-items: baseline;
 }
 
 /* estilo para profile.html */
@@ -47,11 +52,15 @@
   margin-top: 10px;
   margin-left: 10px;
   justify-content: space-around;
+  align-items: center;
 }
 .contenedor-foto {
-  background-color: blueviolet;
-  width: 30%;
-  padding: 5px;
+  width:150px;
+  height:150px;
+  background-image: url( https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg);
+  background-size:cover;
+  background-position: -90px;
+  border-radius: 50%;
 }
 .contenedor-banner {
   background-color: red;
@@ -60,14 +69,6 @@
   display: flex;
   margin-left: 10px;
   justify-content: stretch;
-}
-
-.imagen-foto {
-  object-fit: cover;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  padding: 10px;
 }
 
 .imagen-banner {
@@ -101,3 +102,4 @@
   justify-content: center;
   align-items: flex-start;
 }
+

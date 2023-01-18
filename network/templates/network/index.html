@@ -27,14 +27,11 @@
     <div class="contenedor-post-anterior">
       <div class="contenedor-usuario-post">
         <a id="prueba" href="{% url 'profile' post.user.id %}">{{ post.user.username }}</a>
-      </div>
-      <div class="contenedor-edit">
         {% if user.id == post.user.id %}
-        <a href="{% url 'index' %}" onclick="return false;">Edit</a>
+        <button id="edit-button" class="btn btn-outline-primary" onclick="return false;">Edit</button>
         {% endif %}
       </div>
       <div class="contenedor-text-post">
-        {{ post.id }} <br>
         {{ post.text }} <br>
         {{ post.date_creation }} <br>
         <input type="hidden" class="post_id_list" value="{{ post.id }}">
@@ -97,7 +94,7 @@
         }
       }
     }
-    edit_list = document.querySelectorAll('.contenedor-edit');
+    edit_list = document.querySelectorAll('.contenedor-usuario-post');
     for (let i = 0; i < edit_list.length; i++) {
       edit_list[i].addEventListener('click', () => edit_post(i));
     }
