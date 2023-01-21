@@ -65,7 +65,7 @@
 .contenedor-banner {
   width: 500px;
   height: 150px;
-  background-image: url( https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg);
+  background-image: url( https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=);
   background-size:cover;
   margin-right: 10px;
 }
@@ -103,9 +103,21 @@
 }
 
 .contenedor-boton {
-  width: 120px;
+  width: 280px;
   display: flex;
-  justify-content: center;
+  justify-content: end;
   align-items: flex-start;
 }
 
+.change-image {
+  margin-right: 20px;
+  width: 130px;
+}
+
+.contenedor-follow {
+  width: 120px;
+  display: flex;
+  justify-self: center;
+  align-items: flex-start;
+  margin-right: -30px;
+}

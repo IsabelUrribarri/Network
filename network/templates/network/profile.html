@@ -5,31 +5,33 @@
 {% block body %}
 {% if user.is_authenticated %}
 <div class="marco">
-<div class="contenedor-encabezado">
-  <div class="contenedor-foto">
-  </div>
-  <div class="contenedor-banner">
-  </div>
-</div>
-
-<div class="contenedor-cuerpo">
-  <div class="contenedor-datos-usuario">
-    @{{ user.username }} <br>
-    Joined {{ month }} {{ year }} <br>
-    <div class="contenedor-follow">
-      <span><strong>{{ following }}</strong> Following</span>
-      <span><strong id="followers">{{ followers }}</strong> Followers</span>
+  <div class="contenedor-encabezado">
+    <div class="contenedor-foto">
+    </div>
+    <div class="contenedor-banner">
     </div>
   </div>
-  <input type="hidden" value="{{ user.id }}" id="user-id">
-  <div class="contenedor-boton">
-    <!-- {% if user.id == login_user.id %}
-          <button type="button" class="btn btn-outline-primary">Edit</button>
-        {% else %} -->
-    <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
-    <!-- {% endif %} -->
+
+  <div class="contenedor-cuerpo">
+    <div class="contenedor-datos-usuario">
+      @{{ user.username }} <br>
+      Joined {{ month }} {{ year }} <br>
+      <div class="contenedor-follow">
+        <span><strong>{{ following }}</strong> Following</span>
+        <span><strong id="followers">{{ followers }}</strong> Followers</span>
+      </div>
+    </div>
+    <input type="hidden" value="{{ user.id }}" id="user-id">
+    <div class="contenedor-boton">
+      {% if user.id == login_user.id %}
+        <button type="button" class="btn btn-outline-primary change-image" id="change-image">Change image</button>
+      {% else %}
+      <div class="contenedor-follow">
+        <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
+      </div>
+      {% endif %}
+    </div>
   </div>
-</div>
 </div>
 <div class="contenedor-lista-posts">
   <div class="contenedor-lista-posts">
@@ -63,14 +65,28 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
 
-    button = document.querySelector("button")
-    button.addEventListener('click', () => button_action('action'));
-    number_of_followers = document.querySelector('#followers')
-    like_list = document.querySelectorAll('.like-button');
+    image_index = 1
+    count = 1
+    const button = document.querySelector("#follow-unfollow")
+    if (button != null) {
+      button.addEventListener('click', () => button_action('action'));
+    }
+    let number_of_followers = document.querySelector('#followers')
+    let like_list = document.querySelectorAll('.like-button');
     for (let i = 0; i < like_list.length; i++) {
       like_list[i].addEventListener('click', () => toggle_like(i));
     }
+    const change_image_button = document.querySelector("#change-image")
+    change_image_button.addEventListener('click', () => change_image('image'));
   });
+
+  function change_image(image) {
+    image_url_list = ["https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=", "https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg", "https://cdn.pixabay.com/photo/2016/09/22/10/44/banner-1686943_640.jpg"]
+    const div_banner = document.querySelector(".contenedor-banner")
+    div_banner.setAttribute("style", `background-image: url(${image_url_list[image_index]});`);
+    count++
+    image_index = count%3
+  }
 
   function button_action(action) {
     if (button.innerHTML == 'Follow') {
