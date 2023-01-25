@@ -24,7 +24,7 @@
     <input type="hidden" value="{{ user.id }}" id="user-id">
     <div class="contenedor-boton">
       {% if user.id == login_user.id %}
-        <button type="button" class="btn btn-outline-primary change-image" id="change-image">Change image</button>
+      <button type="button" class="btn btn-outline-primary change-image" id="change-image">Change image</button>
       {% else %}
       <div class="contenedor-follow">
         <button type="button" id="follow-unfollow" class="btn btn-outline-primary">{{ option }}</button>
@@ -64,9 +64,20 @@
 {% block script %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-
+    foto_count = 0
+    foto_index = 0
+    change_photo_init();
     image_index = 1
     count = 1
+    image_url_list = ["https://i.picsum.photos/id/237/660/370.jpg?hmac=CuQ1IHxYkYQEGw57lbWDFyMhVWNDV7F8_b65hljLaYA",
+      "https://cdn.wamiz.fr/article/images/ES%20PHOTOS/PERROS/pugpiscis.jpg",
+      "https://www.bunko.pet/__export/1665511747848/sites/debate/img/2022/10/11/perro_signo_de_zodiaco.jpg_976912859.jpg",
+      "https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg"]
+
+    banner_url_list = ["https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=", 
+      "https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg",
+      "https://cdn.pixabay.com/photo/2016/09/22/10/44/banner-1686943_640.jpg"]
+
     const button = document.querySelector("#follow-unfollow")
     if (button != null) {
       button.addEventListener('click', () => button_action('action'));
@@ -77,16 +88,64 @@
       like_list[i].addEventListener('click', () => toggle_like(i));
     }
     const change_image_button = document.querySelector("#change-image")
-    change_image_button.addEventListener('click', () => change_image('image'));
+    change_image_button.addEventListener('click', () => change_banner('image'));
+    document.querySelector('.contenedor-foto').addEventListener('click', () => change_photo('image'));
+    change_banner('image');
+  
   });
 
-  function change_image(image) {
-    image_url_list = ["https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=", "https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg", "https://cdn.pixabay.com/photo/2016/09/22/10/44/banner-1686943_640.jpg"]
-    const div_banner = document.querySelector(".contenedor-banner")
-    div_banner.setAttribute("style", `background-image: url(${image_url_list[image_index]});`);
-    count++
-    image_index = count%3
+  function change_photo_init(){
+    fetch(`/profile/photo/${1}`)
+      .then(response => response.json())
+      .then(object => {
+        for (let i = 0; i < image_url_list.length; i++) {
+          if (image_url_list[i] === object['url_photo']) {
+            foto_index = i
+            foto_count = i
+            break
+          }
+        }
+        div_photo = document.querySelector('.contenedor-foto')
+        div_photo.setAttribute("style", `background-image: url(${object['url_photo']});`);
+      });
+    foto_count++
+    foto_index = foto_count % 4
   }
+
+  function change_banner(image) {
+    const div_banner = document.querySelector(".contenedor-banner")
+    div_banner.setAttribute("style", `background-image: url(${banner_url_list[image_index]});`);
+    count++
+    image_index = count % 3
+    fetch(`/profile/banner/${1}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        url_banner: image_url_list[image_index],
+      })
+    })
+      .then(response => response.json())
+      .then(result => {
+        console.log(result)
+      });
+  }
+
+  function change_photo(image) {
+    const div_photo = document.querySelector(".contenedor-foto")
+    div_photo.setAttribute("style", `background-image: url(${image_url_list[foto_index]});`);
+    fetch(`/profile/photo/${1}`,{
+      method: 'POST',      
+      body: JSON.stringify({
+        url_photo: image_url_list[foto_index],
+      })
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+    });
+    foto_count++
+    foto_index = foto_count % 4
+  }
+
 
   function button_action(action) {
     if (button.innerHTML == 'Follow') {

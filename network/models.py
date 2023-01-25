@@ -6,6 +6,8 @@ class User(AbstractUser):
     pass
     date_creation = models.DateTimeField(auto_now_add=True, null=True)
     date_update = models.DateTimeField(auto_now=True, null=True)
+    banner_url_image = models.URLField(max_length=500, default="https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=")
+    photo_url_image = models.URLField(max_length=500, default="https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg")
 
 class Post(models.Model):
     text = models.TextField(blank = True)

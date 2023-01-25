@@ -31,6 +31,7 @@
 
 .contenedor-datos-usuario {
   padding-left: 10px;
+  width: 220px;
 }
 
 .contenedor-usuario-post {
@@ -56,8 +57,11 @@
 .contenedor-foto {
   width:150px;
   height:150px;
-  background-image: url( https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg);
   background-size:cover;
+  /* background-image: url( https://ichef.bbci.co.uk/news/660/cpsprodpb/48DD/production/_107435681_perro1.jpg);
+  background-image: url( https://www.bunko.pet/__export/1665511747848/sites/debate/img/2022/10/11/perro_signo_de_zodiaco.jpg_976912859.jpg);
+  background-image: url(https://cdn.wamiz.fr/article/images/ES%20PHOTOS/PERROS/pugpiscis.jpg);
+  background-image: url(https://i.picsum.photos/id/237/660/370.jpg?hmac=CuQ1IHxYkYQEGw57lbWDFyMhVWNDV7F8_b65hljLaYA); */
   background-position: -90px;
   border-radius: 50%;
   margin-left: -10px;
@@ -65,7 +69,7 @@
 .contenedor-banner {
   width: 500px;
   height: 150px;
-  background-image: url( https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=);
+  /* background-image: url( https://media.istockphoto.com/id/1260122654/photo/autumn-landscape-beautiful-city-park-with-fallen-yellow-leaves.jpg?s=612x612&w=0&k=20&c=EVuX7Mp6nqzHaGijUPS98KpNsF6j_6Q4-vhmY9x8U-0=); */
   background-size:cover;
   margin-right: 10px;
 }
@@ -95,11 +99,8 @@
   margin-bottom: 20px;
 }
 
-.contenedor-follow {
-  display: flex;
-  width: 220px;
-  justify-content: space-between;
-  margin-top: 10px;
+.contenedor-follow span {
+  width: 100px;
 }
 
 .contenedor-boton {
@@ -115,9 +116,10 @@
 }
 
 .contenedor-follow {
-  width: 120px;
+  width: 200px;
   display: flex;
   justify-self: center;
   align-items: flex-start;
   margin-right: -30px;
+  margin-top: 15px;
 }

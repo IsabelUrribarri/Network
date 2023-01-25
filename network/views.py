@@ -164,6 +164,37 @@ def profile(request, id):
            "option": ifFollowing(logged_user, user),
         })
 
+@csrf_exempt
+def photo(request, id):
+    user = User.objects.get(id=id)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user.photo_url_image = data["url_photo"]
+        user.save()
+        return JsonResponse({
+            "text": 'url guardados',
+            }, status=201)
+    else:
+        return JsonResponse({
+            "text": 'no es un post',
+            "url_photo": user.photo_url_image,
+            }, status=201)
+
+@csrf_exempt
+def banner(request, id):
+    user = User.objects.get(id=id)
+    data = json.loads(request.body)
+    if request.method == "POST":
+        user.banner_url_image = data["url_banner"]
+        user.save()
+        return JsonResponse({
+            "text": 'url guardados',
+            }, status=201)
+    else:
+        return JsonResponse({
+            "text": 'no es un post',
+            }, status=404)
+
 def login_view(request):
     if request.method == "POST":
 
