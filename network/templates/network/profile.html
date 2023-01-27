@@ -66,9 +66,11 @@
   document.addEventListener('DOMContentLoaded', function () {
     foto_count = 0
     foto_index = 0
+    image_index = 0
+    count = 0
     change_photo_init();
-    image_index = 1
-    count = 1
+    change_banner_init();
+    console.log(count," despues de cargar el banner inicial ", image_index)
     image_url_list = ["https://i.picsum.photos/id/237/660/370.jpg?hmac=CuQ1IHxYkYQEGw57lbWDFyMhVWNDV7F8_b65hljLaYA",
       "https://cdn.wamiz.fr/article/images/ES%20PHOTOS/PERROS/pugpiscis.jpg",
       "https://www.bunko.pet/__export/1665511747848/sites/debate/img/2022/10/11/perro_signo_de_zodiaco.jpg_976912859.jpg",
@@ -78,9 +80,9 @@
       "https://cdn.pixabay.com/photo/2015/12/15/09/04/banner-1093909__340.jpg",
       "https://cdn.pixabay.com/photo/2016/09/22/10/44/banner-1686943_640.jpg"]
 
-    const button = document.querySelector("#follow-unfollow")
-    if (button != null) {
-      button.addEventListener('click', () => button_action('action'));
+    const button_follow = document.querySelector("#follow-unfollow")
+    if (button_follow != null) {
+      button_follow.addEventListener('click', () => button_action('action'));
     }
     let number_of_followers = document.querySelector('#followers')
     let like_list = document.querySelectorAll('.like-button');
@@ -88,51 +90,79 @@
       like_list[i].addEventListener('click', () => toggle_like(i));
     }
     const change_image_button = document.querySelector("#change-image")
-    change_image_button.addEventListener('click', () => change_banner('image'));
-    document.querySelector('.contenedor-foto').addEventListener('click', () => change_photo('image'));
-    change_banner('image');
+    if (change_image_button != null){
+      change_image_button.addEventListener('click', () => change_banner('image'));
+      document.querySelector('.contenedor-foto').addEventListener('click', () => change_photo('image'));
+    }
   
   });
 
   function change_photo_init(){
-    fetch(`/profile/photo/${1}`)
+    let index = 0
+    let user_id = document.querySelector('#user-id')
+    fetch(`/profile/photo/${user_id}`)
       .then(response => response.json())
       .then(object => {
         for (let i = 0; i < image_url_list.length; i++) {
           if (image_url_list[i] === object['url_photo']) {
-            foto_index = i
-            foto_count = i
+             index = i
             break
           }
         }
+        foto_count = index + 1
+        foto_index = foto_count % 4
         div_photo = document.querySelector('.contenedor-foto')
         div_photo.setAttribute("style", `background-image: url(${object['url_photo']});`);
       });
-    foto_count++
-    foto_index = foto_count % 4
+  }
+
+  function change_banner_init(){
+    let index = 0
+    let user_id = document.querySelector('#user-id')
+    fetch(`/profile/banner/${user_id}`)
+      .then(response => response.json())
+      .then(object => {
+        for (let i = 0; i < banner_url_list.length; i++) {
+          if (banner_url_list[i] === object['url_banner']) {
+             index = i
+            console.log(" leyendo el banner", index)
+            break
+          }
+        }
+        console.log(index, "tiene valor?")
+        count = index + 1
+        image_index = count % 3
+        console.log(count," despues de cargar el banner ", image_index)
+        div_banner = document.querySelector('.contenedor-banner')
+        div_banner.setAttribute("style", `background-image: url(${object['url_banner']});`);
+      });
+    
+    
   }
 
   function change_banner(image) {
+    let user_id = document.querySelector('#user-id')
     const div_banner = document.querySelector(".contenedor-banner")
     div_banner.setAttribute("style", `background-image: url(${banner_url_list[image_index]});`);
-    count++
-    image_index = count % 3
-    fetch(`/profile/banner/${1}`, {
+    fetch(`/profile/banner/${user_id}`, {
       method: 'POST',
       body: JSON.stringify({
-        url_banner: image_url_list[image_index],
+        url_banner: banner_url_list[image_index],
       })
     })
-      .then(response => response.json())
-      .then(result => {
-        console.log(result)
-      });
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+    });
+    count++
+    image_index = count % 3
   }
 
   function change_photo(image) {
+    let user_id = document.querySelector('#user-id')
     const div_photo = document.querySelector(".contenedor-foto")
     div_photo.setAttribute("style", `background-image: url(${image_url_list[foto_index]});`);
-    fetch(`/profile/photo/${1}`,{
+    fetch(`/profile/photo/${user_id}`,{
       method: 'POST',      
       body: JSON.stringify({
         url_photo: image_url_list[foto_index],
@@ -148,7 +178,8 @@
 
 
   function button_action(action) {
-    if (button.innerHTML == 'Follow') {
+    button_follow = document.querySelector("#follow-unfollow")
+    if (button_follow != null && button_follow.innerHTML == 'Follow') {
       console.log('Follow')
       user_id = (document.querySelector('#user-id').value)
       fetch('network', {
@@ -161,13 +192,14 @@
         .then(response => response.json())
         .then(result => {
           console.log(result)
-          number_of_followers.innerHTML = result.number_of_followers
-          button.innerHTML = 'Unfollow'
+          let number_of_followers = document.querySelector('#followers')
+          if (number_of_followers != null){
+            number_of_followers.innerHTML = result.number_of_followers
+            button_follow.innerHTML = 'Unfollow'
+          }
         });
-      console.log(number_of_followers)
-      // location.reload()
     }
-    else if (button.innerHTML == 'Unfollow') {
+    else if (button_follow.innerHTML == 'Unfollow') {
       console.log('Unfollow')
       user_id = (document.querySelector('#user-id').value)
       fetch('network', {
@@ -180,14 +212,17 @@
         .then(response => response.json())
         .then(result => {
           console.log(result)
-          number_of_followers.innerHTML = result.number_of_followers
-          button.innerHTML = 'Follow'
+          let number_of_followers = document.querySelector('#followers')
+          if (number_of_followers != null){
+            number_of_followers.innerHTML = result.number_of_followers
+            button_follow.innerHTML = 'Follow'
+          }
         });
 
       // location.reload()
     }
 
-    else if (button.innerHTML == 'Edit') {
+    else if (button_follow.innerHTML == 'Edit') {
       console.log('Edit')
     }
     // location.reload()

@@ -183,8 +183,8 @@ def photo(request, id):
 @csrf_exempt
 def banner(request, id):
     user = User.objects.get(id=id)
-    data = json.loads(request.body)
     if request.method == "POST":
+        data = json.loads(request.body)
         user.banner_url_image = data["url_banner"]
         user.save()
         return JsonResponse({
@@ -193,7 +193,8 @@ def banner(request, id):
     else:
         return JsonResponse({
             "text": 'no es un post',
-            }, status=404)
+            "url_banner": user.banner_url_image,
+            }, status=201)
 
 def login_view(request):
     if request.method == "POST":
