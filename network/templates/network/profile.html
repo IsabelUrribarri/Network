@@ -99,7 +99,7 @@
 
   function change_photo_init(){
     let index = 0
-    let user_id = document.querySelector('#user-id')
+    let user_id = document.querySelector('#user-id').value
     fetch(`/profile/photo/${user_id}`)
       .then(response => response.json())
       .then(object => {
@@ -118,7 +118,7 @@
 
   function change_banner_init(){
     let index = 0
-    let user_id = document.querySelector('#user-id')
+    let user_id = document.querySelector('#user-id').value
     fetch(`/profile/banner/${user_id}`)
       .then(response => response.json())
       .then(object => {
@@ -141,7 +141,7 @@
   }
 
   function change_banner(image) {
-    let user_id = document.querySelector('#user-id')
+    let user_id = document.querySelector('#user-id').value
     const div_banner = document.querySelector(".contenedor-banner")
     div_banner.setAttribute("style", `background-image: url(${banner_url_list[image_index]});`);
     fetch(`/profile/banner/${user_id}`, {
@@ -159,7 +159,7 @@
   }
 
   function change_photo(image) {
-    let user_id = document.querySelector('#user-id')
+    let user_id = document.querySelector('#user-id').value
     const div_photo = document.querySelector(".contenedor-foto")
     div_photo.setAttribute("style", `background-image: url(${image_url_list[foto_index]});`);
     fetch(`/profile/photo/${user_id}`,{
